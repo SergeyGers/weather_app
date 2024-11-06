@@ -14,14 +14,12 @@ app = Flask(__name__)
 
 HISTORY_FILE = '/tmp/search_history.json'
 
-# Define a custom Jinja2 filter for formatting datetime
 @app.template_filter('datetimeformat')
 def datetimeformat(value, format='%Y-%m-%d %H:%M'):
     dt = datetime.fromisoformat(value)
     return dt.strftime(format)
 
 def append_to_history(city_name, city_info, forecast_info):
-    # Load existing history
     if os.path.exists(HISTORY_FILE):
         try:
             with open(HISTORY_FILE, 'r') as f:
@@ -31,7 +29,6 @@ def append_to_history(city_name, city_info, forecast_info):
     else:
         history = []
 
-    # Append new entry
     history.append({
         "timestamp": datetime.now().isoformat(),
         "city_name": city_name,
@@ -45,13 +42,11 @@ def append_to_history(city_name, city_info, forecast_info):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    # Fetch the background color from environment variables
-    bg_color = os.getenv('BG_COLOR', '#FFFFFF')  # Default to white if not set
+    bg_color = os.getenv('BG_COLOR', '#FFFFFF')
 
     city_info = None
     forecast_info = None
     
-    # Ensure the directory for caching exists within /tmp
     cache_dir = '/tmp/.cache'
     os.makedirs(cache_dir, exist_ok=True)
     
@@ -140,15 +135,13 @@ def index():
                 city_info = {"name": "Unknown", "country": "Unknown"}
                 forecast_info = {"error": "City not found"}
 
-        # Save the search and forecast info to the history
         append_to_history(city_name, city_info, forecast_info)
 
     return render_template("index.html", city_info=city_info, forecast_info=forecast_info, bg_color=bg_color)
 
 @app.route('/history', methods=['GET'])
 def history():
-    # Fetch the background color from environment variables
-    bg_color = os.getenv('BG_COLOR', '#FFFFFF')  # Default to white if not set
+    bg_color = os.getenv('BG_COLOR', '#FFFFFF')
 
     history = []
     if os.path.exists(HISTORY_FILE):
@@ -161,5 +154,5 @@ def history():
     return render_template("history.html", history=history, bg_color=bg_color)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5005, debug=True)
 
