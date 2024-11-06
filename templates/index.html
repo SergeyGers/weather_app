@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Forecast App</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="background-color: {{ bg_color }};">
+    <div class="container">
+        <h1 class="title">Weather Forecast</h1>
+        
+        <!-- City Search Form -->
+        <form method="POST" class="form">
+            <label for="city_name" class="label">City Name:</label>
+            <input type="text" id="city_name" name="city_name" class="input" placeholder="Enter city name" required>
+            <button type="submit" class="button">Get Forecast</button>
+        </form>
+        
+        <!-- View History Button -->
+        <form action="{{ url_for('history') }}" method="GET" class="form-inline">
+            <button type="submit" class="button secondary">View Search History</button>
+        </form>
+        
+        <!-- Display City Information -->
+        {% if city_info %}
+            <div class="city-info">
+                <h2 class="subtitle">City Information</h2>
+                <p><strong>City:</strong> {{ city_info.name }}</p>
+                <p><strong>Country:</strong> {{ city_info.country }}</p>
+            </div>
+        {% endif %}
+        
+        <!-- Display Forecast Information -->
+        {% if forecast_info %}
+            {% if forecast_info.error %}
+                <div class="error-message">
+                    <p>{{ forecast_info.error }}</p>
+                </div>
+            {% else %}
+                <div class="forecast-info">
+                    <h2 class="subtitle">7-Day Weather Forecast</h2>
+                    <table class="forecast-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Day</th>
+                                <th>Max Temp (°C)</th>
+                                <th>Min Temp (°C)</th>
+                                <th>Humidity (%)</th>
+                                <th>Weather</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for day in forecast_info %}
+                                <tr>
+                                    <td>{{ day.date }}</td>
+                                    <td>{{ day.day_of_week }}</td>
+                                    <td>{{ day.max }}°C</td>
+                                    <td>{{ day.min }}°C</td>
+                                    <td>{{ "%.2f"|format(day.humidity) }}%</td>
+                                    <td>
+                                        <img style="height: 50px" src="{{ url_for('static', filename='assets/' + day.weather_code + '.png') }}" alt="{{ day.weather_code }}" class="weather-icon">
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>
+

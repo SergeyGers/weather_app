@@ -1,0 +1,9 @@
+Flask==2.1.1
+boto3==1.24.17
+requests_cache==0.9.7
+retry_requests==1.0.0
+prometheus_client==0.13.1
+Werkzeug==2.0.3
+cattrs==22.2
+python-dotenv==0.20.0
+

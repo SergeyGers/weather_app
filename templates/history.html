@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Weather App - History</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body style="background-color: {{ bg_color }};">
+    <div class="container">
+        <h1 class="title">Search History</h1>
+
+        {% if history %}
+            {% for entry in history %}
+                <div class="history-entry">
+                    <h2 class="subtitle">{{ entry.city_name }} - {{ entry.timestamp | datetimeformat }}</h2>
+                    <p>City: {{ entry.city_info.name }}, {{ entry.city_info.country }}</p>
+                    <ul>
+                        {% for day in entry.forecast_info %}
+                            <li>{{ day.date }} ({{ day.day_of_week }}): Max Temp {{ day.max }}°C, Min Temp {{ day.min }}°C, Humidity {{ "%.2f" | format(day.humidity) }}%</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No history available.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
+
